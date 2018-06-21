@@ -2,4 +2,7 @@
     <string name="app_name">Journal App</string>
     <string name="action_settings">Settings</string>
     <string name="write_your_thoughts">Write your thoughts...</string>
+    <string name="date_time"><![CDATA[Date & Time]]></string>
+    <string name="my_post_here">My post here</string>
+    <string name="no_posts_available_sorry">No posts available.. Sorry!</string>
 </resources>
