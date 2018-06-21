@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
 import com.example.tobibur.journalapp.helper.DatabaseHandler;
@@ -27,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
     private List<Journal> posts;
     TextView textView;
 
+    Integer dbPostCount;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,20 +42,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.recyclerView_id);
         textView = findViewById(R.id.nothing_text);
 
-        if(db.getPostsCount()>=1){
-            posts = db.getAllPosts();
-
-        }else {
-            recyclerView.setVisibility(View.GONE);
-            textView.setVisibility(View.VISIBLE);
-        }
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(linearLayoutManager);
-
-        recyclerView.setHasFixedSize(true);
-        RecyclerAdapter adapter = new RecyclerAdapter(posts, this);
-        recyclerView.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
+        retriveData();
 
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
@@ -85,5 +76,31 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        retriveData();
+    }
+
+    private void retriveData() {
+        dbPostCount = db.getPostsCount();
+
+        if(dbPostCount>=1){
+            posts = db.getAllPosts();
+
+        }else {
+            recyclerView.setVisibility(View.GONE);
+            textView.setVisibility(View.VISIBLE);
+        }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(linearLayoutManager);
+
+        recyclerView.setHasFixedSize(true);
+        RecyclerAdapter adapter = new RecyclerAdapter(posts, this);
+        adapter.notifyDataSetChanged();
+        recyclerView.setAdapter(adapter);
     }
 }

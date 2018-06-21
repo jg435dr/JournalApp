@@ -59,8 +59,8 @@ public class PostActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.save_btn) {
             makepost();
-            Intent intent = new Intent(PostActivity.this, MainActivity.class);
-            startActivity(intent);
+            //Intent intent = new Intent(PostActivity.this, MainActivity.class);
+            //startActivity(intent);
             finish();
             return true;
         }
