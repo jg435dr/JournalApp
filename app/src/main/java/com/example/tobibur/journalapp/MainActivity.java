@@ -1,6 +1,10 @@
 package com.example.tobibur.journalapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +20,7 @@ import android.widget.Toast;
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
 import com.example.tobibur.journalapp.helper.DatabaseHandler;
 import com.example.tobibur.journalapp.model.Journal;
+import com.jetradar.desertplaceholder.DesertPlaceholder;
 
 import java.util.List;
 
@@ -26,7 +31,9 @@ public class MainActivity extends AppCompatActivity {
     String log1="Nothing here";
     RecyclerView recyclerView;
     private List<Journal> posts;
-    TextView textView;
+    DesertPlaceholder textView;
+    FloatingActionButton fab;
+    Toolbar toolbar;
 
     Integer dbPostCount;
 
@@ -35,17 +42,25 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         db = new DatabaseHandler(this);
         recyclerView = findViewById(R.id.recyclerView_id);
         textView = findViewById(R.id.nothing_text);
+        textView.setOnButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = getIntent();
+                finish();
+                startActivity(intent);
+            }
+        });
 
         retriveData();
 
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -77,6 +92,8 @@ public class MainActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
 
     @Override
     protected void onResume() {

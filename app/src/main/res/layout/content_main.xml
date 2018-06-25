@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="16dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     android:orientation="vertical"
     tools:context=".MainActivity"
@@ -15,12 +14,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/recyclerView_id" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/no_posts_available_sorry"
+    <com.jetradar.desertplaceholder.DesertPlaceholder
         android:id="@+id/nothing_text"
-        android:visibility="gone"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:dp_buttonText="retry"
+        app:dp_message="No posts available.."/>
 
 </LinearLayout>
