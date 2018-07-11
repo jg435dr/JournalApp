@@ -16,18 +16,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class PostActivity extends AppCompatActivity {
 
-    AppCompatEditText postEditText;
+    @BindView(R.id.edit_post) AppCompatEditText postEditText;
     DatabaseHandler db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_post);
+        ButterKnife.bind(this);
 
         db = new DatabaseHandler(this);
-        postEditText = findViewById(R.id.edit_post);
 
     }
 

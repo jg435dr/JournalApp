@@ -30,16 +30,18 @@ import com.jetradar.desertplaceholder.DesertPlaceholder;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MainActivity extends AppCompatActivity {
 
 
     DatabaseHandler db;
-    String log1="Nothing here";
-    RecyclerView recyclerView;
+    @BindView(R.id.recyclerView_id) RecyclerView recyclerView;
     private List<Journal> posts;
-    DesertPlaceholder textView;
-    FloatingActionButton fab;
-    Toolbar toolbar;
+    @BindView(R.id.nothing_text) DesertPlaceholder textView;
+    @BindView(R.id.fab) FloatingActionButton fab;
+    @BindView(R.id.toolbar) Toolbar toolbar;
 
     Integer dbPostCount;
     LayoutAnimationController mController=null;
@@ -53,12 +55,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        ButterKnife.bind(this);
+
         setSupportActionBar(toolbar);
 
         db = new DatabaseHandler(this);
-        recyclerView = findViewById(R.id.recyclerView_id);
-        textView = findViewById(R.id.nothing_text);
         textView.setOnButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,13 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
         retriveData();
 
-
-        fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                /*Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();*/
                 addNewPost();
             }
         });
@@ -107,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
                         .cancelable(true)                  // Whether tapping outside the outer circle dismisses the view
                         .tintTarget(true)                   // Whether to tint the target view's color
                         .transparentTarget(false)           // Specify whether the target is transparent (displays the content underneath)
-                        .icon(getDrawable(R.drawable.ic_add_black_24dp))                     // Specify a custom drawable to draw as the target
+                        .icon(getResources().getDrawable(R.drawable.ic_add_black_24dp))                     // Specify a custom drawable to draw as the target
                         .targetRadius(60),                  // Specify the target radius (in dp)
                 new TapTargetView.Listener() {          // The listener can listen for regular clicks, long clicks or cancels
                     @Override
