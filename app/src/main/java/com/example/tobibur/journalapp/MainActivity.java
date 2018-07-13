@@ -1,12 +1,8 @@
 package com.example.tobibur.journalapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -18,8 +14,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
 import com.example.tobibur.journalapp.helper.DatabaseHandler;
@@ -69,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        retriveData();
+        retrieveData();
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,10 +140,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        retriveData();
+        retrieveData();
     }
 
-    private void retriveData() {
+    private void retrieveData() {
         dbPostCount = db.getPostsCount();
 
         if(dbPostCount>=1){
