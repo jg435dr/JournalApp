@@ -1,9 +1,12 @@
-package com.example.tobibur.journalapp;
+package com.example.tobibur.journalapp.viewPosts;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,30 +17,31 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
+import com.example.tobibur.journalapp.R;
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
-import com.example.tobibur.journalapp.helper.DatabaseHandler;
-import com.example.tobibur.journalapp.model.Journal;
+import com.example.tobibur.journalapp.addPosts.PostActivity;
+import com.example.tobibur.journalapp.database.JournalModel;
 import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
 
-
-    DatabaseHandler db;
     @BindView(R.id.recyclerView_id) RecyclerView recyclerView;
-    private List<Journal> posts;
     @BindView(R.id.nothing_text) DesertPlaceholder textView;
     @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
-    Integer dbPostCount;
+    private MainViewModel mViewModel;
+    private RecyclerAdapter adapter;
     LayoutAnimationController mController=null;
 
     private static final String PREFS_NAME = "prefs";
@@ -53,7 +57,8 @@ public class MainActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
 
-        db = new DatabaseHandler(this);
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+
         textView.setOnButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -122,9 +127,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
@@ -136,23 +139,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        retrieveData();
-    }
-
     private void retrieveData() {
-        dbPostCount = db.getPostsCount();
-
-        if(dbPostCount>=1){
-            posts = db.getAllPosts();
-
-        }else {
-            recyclerView.setVisibility(View.GONE);
-            textView.setVisibility(View.VISIBLE);
-        }
 
         mController = AnimationUtils.loadLayoutAnimation(this,R.anim.layout_fall_down);
 
@@ -160,9 +147,30 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setHasFixedSize(true);
-        RecyclerAdapter adapter = new RecyclerAdapter(posts, this);
+        adapter = new RecyclerAdapter(new ArrayList<JournalModel>(), this);
         recyclerView.setLayoutAnimation(mController);
-        adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
+        mViewModel.getPostList().observe(this, new Observer<List<JournalModel>>() {
+            @Override
+            public void onChanged(@Nullable List<JournalModel> journalModels) {
+                adapter.addPost(journalModels);
+                if (journalModels != null && journalModels.size() < 1) {
+                    recyclerView.setVisibility(View.GONE);
+                    textView.setVisibility(View.VISIBLE);
+                }else {
+                    recyclerView.setVisibility(View.VISIBLE);
+                    textView.setVisibility(View.GONE);
+                }
+            }
+        });
+
+    }
+
+    @Override
+    public boolean onLongClick(View view) {
+        JournalModel journalModel = (JournalModel) view.getTag();
+        mViewModel.deletePost(journalModel);
+        Toast.makeText(this, journalModel.getPost()+"->Just deleted", Toast.LENGTH_SHORT).show();
+        return true;
     }
 }

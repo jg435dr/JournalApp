@@ -8,20 +8,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.tobibur.journalapp.R;
-import com.example.tobibur.journalapp.model.Journal;
+import com.example.tobibur.journalapp.database.JournalModel;
 
 import java.util.List;
 
 public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
 
-    //private List<String> dateTime;
-    private List<Journal> posts;
-    Context context;
+    private List<JournalModel> posts;
+    private View.OnLongClickListener longClickListener;
 
-    public RecyclerAdapter(List<Journal> posts, Context context) {
-        //this.dateTime = dateTime;
+    public RecyclerAdapter(List<JournalModel> posts, View.OnLongClickListener longClickListener) {
         this.posts = posts;
-        this.context = context;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -35,13 +33,20 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
-        Journal post = posts.get(i);
-        viewHolder.dateTime.setText(post.get_date_time());
-        viewHolder.posts.setText(post.get_Journal_data());
+        JournalModel post = posts.get(i);
+        viewHolder.dateTime.setText(post.getDate_time());
+        viewHolder.posts.setText(post.getPost());
+        viewHolder.itemView.setTag(post);
+        viewHolder.itemView.setOnLongClickListener(longClickListener);
     }
 
     @Override
     public int getItemCount() {
         return posts.size();
+    }
+
+    public void addPost(List<JournalModel> journalModels){
+        this.posts = journalModels;
+        notifyDataSetChanged();
     }
 }
