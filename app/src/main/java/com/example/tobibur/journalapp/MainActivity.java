@@ -16,6 +16,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
+import com.example.tobibur.journalapp.addPosts.PostActivity;
 import com.example.tobibur.journalapp.helper.DatabaseHandler;
 import com.example.tobibur.journalapp.model.Journal;
 import com.getkeepsafe.taptargetview.TapTarget;
@@ -122,9 +123,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
+
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
