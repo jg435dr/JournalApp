@@ -13,6 +13,7 @@ import static android.arch.persistence.room.OnConflictStrategy.REPLACE;
 @Dao
 public interface JournalDao {
 
+    //TODO: orderby {date_time}
     @Query("SELECT * FROM JournalModel")
     LiveData<List<JournalModel>> getAllPosts();
 
