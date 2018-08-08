@@ -2,12 +2,14 @@ package com.example.tobibur.journalapp.viewPosts;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -168,9 +170,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public boolean onLongClick(View view) {
-        JournalModel journalModel = (JournalModel) view.getTag();
-        mViewModel.deletePost(journalModel);
-        Toast.makeText(this, journalModel.getPost()+"->Just deleted", Toast.LENGTH_SHORT).show();
+        deleteDialog(view);
         return true;
+    }
+
+    private void deleteDialog(final View view) {
+        new AlertDialog.Builder(this)
+                .setMessage("Are you sure you want to delete this post?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        JournalModel journalModel = (JournalModel) view.getTag();
+                        mViewModel.deletePost(journalModel);
+                        Toast.makeText(getApplicationContext(), journalModel.getPost()+"->Just deleted", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("No", null)
+                .show();
+
     }
 }
