@@ -14,11 +14,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
@@ -194,16 +196,32 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public void onClick(View view) {
-        JournalModel journalModel = (JournalModel) view.getTag();
+        final JournalModel journalModel = (JournalModel) view.getTag();
         new AlertDialog.Builder(this)
                 .setTitle(journalModel.getDate_time())
                 .setMessage(journalModel.getPost())
                 .setCancelable(false)
                 .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(getApplicationContext()
-                                , "Editing"
-                                , Toast.LENGTH_SHORT).show();
+                        updateDialog(journalModel);
+                    }
+                })
+                .setPositiveButton("Close", null)
+                .show();
+    }
+
+    private void updateDialog(JournalModel journalModel) {
+        LayoutInflater inflater = getLayoutInflater();
+        View alertLayout = inflater.inflate(R.layout.custom_dialog, null);
+        final EditText mEditText = alertLayout.findViewById(R.id.dMessage);
+        mEditText.setText(journalModel.getPost());
+        new AlertDialog.Builder(this)
+                .setTitle(journalModel.getDate_time())
+                .setView(alertLayout)
+                .setCancelable(false)
+                .setNegativeButton("Update", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(MainActivity.this, mEditText.getText().toString(), Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setPositiveButton("Close", null)
