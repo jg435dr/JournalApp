@@ -182,7 +182,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     public void onClick(DialogInterface dialog, int id) {
                         JournalModel journalModel = (JournalModel) view.getTag();
                         mViewModel.deletePost(journalModel);
-                        Toast.makeText(getApplicationContext(), journalModel.getPost()+"->Just deleted", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext()
+                                , journalModel.getPost()+"->Just deleted"
+                                , Toast.LENGTH_SHORT).show();
                     }
                 })
                 .setNegativeButton("No", null)
