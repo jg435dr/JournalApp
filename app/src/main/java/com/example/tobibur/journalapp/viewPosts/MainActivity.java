@@ -35,7 +35,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity implements View.OnLongClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener{
 
     @BindView(R.id.recyclerView_id) RecyclerView recyclerView;
     @BindView(R.id.nothing_text) DesertPlaceholder textView;
@@ -149,7 +149,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setHasFixedSize(true);
-        adapter = new RecyclerAdapter(new ArrayList<JournalModel>(), this);
+        adapter = new RecyclerAdapter(new ArrayList<JournalModel>(), this,this);
         recyclerView.setLayoutAnimation(mController);
         recyclerView.setAdapter(adapter);
         mViewModel.getPostList().observe(this, new Observer<List<JournalModel>>() {
@@ -190,5 +190,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .setNegativeButton("No", null)
                 .show();
 
+    }
+
+    @Override
+    public void onClick(View view) {
+        JournalModel journalModel = (JournalModel) view.getTag();
+        new AlertDialog.Builder(this)
+                .setTitle(journalModel.getDate_time())
+                .setMessage(journalModel.getPost())
+                .setCancelable(false)
+                .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Toast.makeText(getApplicationContext()
+                                , "Editing"
+                                , Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setPositiveButton("Close", null)
+                .show();
     }
 }

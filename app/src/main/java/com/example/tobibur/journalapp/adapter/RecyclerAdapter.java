@@ -16,10 +16,12 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
 
     private List<JournalModel> posts;
     private View.OnLongClickListener longClickListener;
+    private View.OnClickListener mOnClickListener;
 
-    public RecyclerAdapter(List<JournalModel> posts, View.OnLongClickListener longClickListener) {
+    public RecyclerAdapter(List<JournalModel> posts, View.OnLongClickListener longClickListener, View.OnClickListener onClickListener) {
         this.posts = posts;
         this.longClickListener = longClickListener;
+        this.mOnClickListener = onClickListener;
     }
 
     @NonNull
@@ -38,6 +40,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
         viewHolder.posts.setText(post.getPost());
         viewHolder.itemView.setTag(post);
         viewHolder.itemView.setOnLongClickListener(longClickListener);
+        viewHolder.itemView.setOnClickListener(mOnClickListener);
     }
 
     @Override

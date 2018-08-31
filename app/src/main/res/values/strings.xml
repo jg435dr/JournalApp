@@ -5,4 +5,7 @@
     <string name="date_time"><![CDATA[Date & Time]]></string>
     <string name="my_post_here">My post here</string>
     <string name="no_posts_available_sorry">No posts available.. Sorry!</string>
+    <string name="delDialog">"Are you sure you want to delete this post?"</string>
+    <string name="yes">Yes, Delete it!</string>
+    <string name="no">No, Cancel</string>
 </resources>
