@@ -31,8 +31,11 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -210,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .show();
     }
 
-    private void updateDialog(JournalModel journalModel) {
+    private void updateDialog(final JournalModel journalModel) {
         LayoutInflater inflater = getLayoutInflater();
         View alertLayout = inflater.inflate(R.layout.custom_dialog, null);
         final EditText mEditText = alertLayout.findViewById(R.id.dMessage);
@@ -221,7 +224,11 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .setCancelable(false)
                 .setNegativeButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        Toast.makeText(MainActivity.this, mEditText.getText().toString(), Toast.LENGTH_SHORT).show();
+                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
+                        String currDatTime = sdf.format(new Date());
+                        journalModel.setDate_time(currDatTime);
+                        journalModel.setPost(mEditText.getText().toString());
+                        mViewModel.updatePost(journalModel);
                     }
                 })
                 .setPositiveButton("Close", null)

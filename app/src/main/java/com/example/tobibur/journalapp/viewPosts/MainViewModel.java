@@ -44,4 +44,23 @@ public class MainViewModel extends AndroidViewModel {
             return null;
         }
     }
+
+    public void updatePost(JournalModel model){
+        new updateAsyncTask(mJournalDatabase).execute(model);
+    }
+
+    private static class updateAsyncTask extends AsyncTask<JournalModel, Void, Void>{
+
+        private JournalDatabase mJournalDatabase;
+
+        updateAsyncTask(JournalDatabase database){
+            mJournalDatabase = database;
+        }
+
+        @Override
+        protected Void doInBackground(JournalModel... journalModels) {
+            mJournalDatabase.getJournalPosts().updatePost(journalModels[0]);
+            return null;
+        }
+    }
 }
