@@ -182,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private void deleteDialog(final View view) {
         new AlertDialog.Builder(this)
                 .setMessage("Are you sure you want to delete this post?")
-                .setCancelable(false)
+                .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         JournalModel journalModel = (JournalModel) view.getTag();
@@ -203,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         new AlertDialog.Builder(this)
                 .setTitle(journalModel.getDate_time())
                 .setMessage(journalModel.getPost())
-                .setCancelable(false)
+                .setCancelable(true)
                 .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         updateDialog(journalModel);
@@ -221,7 +221,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         new AlertDialog.Builder(this)
                 .setTitle(journalModel.getDate_time())
                 .setView(alertLayout)
-                .setCancelable(false)
+                .setCancelable(true)
                 .setNegativeButton("Update", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
