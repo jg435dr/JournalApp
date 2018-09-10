@@ -8,7 +8,6 @@ import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -39,12 +38,12 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements View.OnLongClickListener, View.OnClickListener{
 
     @BindView(R.id.recyclerView_id) RecyclerView recyclerView;
     @BindView(R.id.nothing_text) DesertPlaceholder textView;
-    @BindView(R.id.fab) FloatingActionButton fab;
     @BindView(R.id.toolbar) Toolbar toolbar;
 
     private MainViewModel mViewModel;
@@ -53,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     private static final String PREFS_NAME = "prefs";
     private static final String IS_FIRST_LAUNCH = "is_first";
-
 
 
     @Override
@@ -77,19 +75,17 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
         retrieveData();
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                addNewPost();
-            }
-        });
-
         SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
         boolean isFirst = settings.getBoolean(IS_FIRST_LAUNCH, true);
         if (isFirst){
             settings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
             showTips();
         }
+    }
+
+    @OnClick(R.id.fab)
+    public void onFabButtonClicked(){
+        addNewPost();
     }
 
     private void showTips() {
