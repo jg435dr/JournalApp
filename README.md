@@ -10,9 +10,9 @@ Journal App using Material Design with Room persistence library
 * [TapTargetView](https://github.com/KeepSafe/TapTargetView)
 * [ButterKnife](https://github.com/JakeWharton/butterknife)
 * [Android Architecture Components](https://developer.android.com/topic/libraries/architecture/adding-components)
-  * Room
-  * ViewModel
-  * LiveData
+  * [Room](https://developer.android.com/topic/libraries/architecture/room)
+  * [ViewModel](https://developer.android.com/topic/libraries/architecture/viewmodel)
+  * [LiveData](https://developer.android.com/topic/libraries/architecture/livedata)
 
 
 ## License & Copyright
