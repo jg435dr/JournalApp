@@ -1,11 +1,13 @@
 package com.example.tobibur.journalapp.viewPosts;
 
+import android.app.KeyguardManager;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -53,11 +55,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private static final String PREFS_NAME = "prefs";
     private static final String IS_FIRST_LAUNCH = "is_first";
 
+    private static int CODE_AUTHENTICATION_VERIFICATION=241;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+
+        KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            if (km != null) {
+                if(km.isKeyguardSecure()) {
+
+                    Intent i = null;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                        i = km.createConfirmDeviceCredentialIntent("Authentication required", "password");
+                    }
+                    startActivityForResult(i, CODE_AUTHENTICATION_VERIFICATION);
+                }
+                else
+                    Toast.makeText(this, "No any security setup done by user(pattern or password or pin or fingerprint", Toast.LENGTH_SHORT).show();
+            }
+        }
+
+    setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
         setSupportActionBar(toolbar);
@@ -80,6 +100,20 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         if (isFirst){
             settings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
             showTips();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode==RESULT_OK && requestCode==CODE_AUTHENTICATION_VERIFICATION)
+        {
+            Toast.makeText(this, "Success: Welcome to Journal App", Toast.LENGTH_SHORT).show();
+        }
+        else
+        {
+            Toast.makeText(this, "Failure: Unable to verify user's identity", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
 
