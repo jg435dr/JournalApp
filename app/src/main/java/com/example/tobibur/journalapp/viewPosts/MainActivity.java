@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -15,16 +16,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
+import com.example.tobibur.journalapp.adapter.CameraAdapter;
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
 import com.example.tobibur.journalapp.addPosts.PostActivity;
 import com.example.tobibur.journalapp.database.JournalModel;
@@ -32,6 +34,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -50,12 +53,16 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     private MainViewModel mViewModel;
     private RecyclerAdapter adapter;
+    //private JournalModel journalModel;
+    //private String imagePath;
+    private CameraAdapter cameraAdapter;
     LayoutAnimationController mController=null;
 
     private static final String PREFS_NAME = "prefs";
     private static final String IS_FIRST_LAUNCH = "is_first";
 
     private static int CODE_AUTHENTICATION_VERIFICATION=241;
+    private static final double DEFAULT_MAX_BITMAP_DIMENSION = 512.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             settings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
             showTips();
         }
+
+        cameraAdapter = new CameraAdapter(this);
     }
 
     @Override
@@ -204,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
 
     @Override
-    public boolean onLongClick(View view) {
+    public boolean onLongClick(View view) { // Control whether photo is deleted !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         deleteDialog(view);
         return true;
     }
@@ -229,8 +238,14 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public void onClick(View view) {
+        View alertLayout = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         final JournalModel journalModel = (JournalModel) view.getTag();
+        String imagePath = journalModel.getPhotoPath();
+        cameraAdapter.setPhoto(((ImageView)alertLayout.findViewById(R.id.dImage)), imagePath);
+        onClickDisplayPhoto(alertLayout, imagePath);
+
         new AlertDialog.Builder(this)
+                .setView(alertLayout)
                 .setTitle(journalModel.getDate_time())
                 .setMessage(journalModel.getPost())
                 .setCancelable(true)
@@ -244,10 +259,27 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     }
 
     private void updateDialog(final JournalModel journalModel) {
-        LayoutInflater inflater = getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.custom_dialog, null);
+        View alertLayout = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         final EditText mEditText = alertLayout.findViewById(R.id.dMessage);
         mEditText.setText(journalModel.getPost());
+        cameraAdapter.setPhoto(((ImageView)alertLayout.findViewById(R.id.dImage)), journalModel.getPhotoPath());
+
+//        alertLayout.findViewById(R.id.dImage).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//                if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+//                    File photoFile = new File(imagePath);
+//
+//                    Uri photoURI = FileProvider.getUriForFile(getApplicationContext(),
+//                                "com.example.tobibur.journalapp",
+//                                photoFile);
+//                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+//                    startActivityForResult(takePictureIntent, CAMERA_REQUEST);
+//                }
+//            }
+//        });
+
         new AlertDialog.Builder(this)
                 .setTitle(journalModel.getDate_time())
                 .setView(alertLayout)
@@ -263,5 +295,27 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 })
                 .setPositiveButton("Close", null)
                 .show();
+    }
+
+    private void onClickDisplayPhoto(View alertLayout, final String imagePath) {
+        alertLayout.findViewById(R.id.dImage).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try
+                {
+                    Intent myIntent = new Intent(android.content.Intent.ACTION_VIEW);
+                    File file = new File(imagePath);
+                    String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString());
+                    String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+                    myIntent.setDataAndType(Uri.fromFile(file),mimetype);
+                    startActivity(myIntent);
+                }
+                catch (Exception e)
+                {
+                    // TODO: handle exception
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 }

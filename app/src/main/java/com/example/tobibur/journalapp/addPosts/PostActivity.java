@@ -1,14 +1,18 @@
 package com.example.tobibur.journalapp.addPosts;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatEditText;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
+import com.example.tobibur.journalapp.adapter.CameraAdapter;
 import com.example.tobibur.journalapp.database.JournalModel;
 
 import java.text.SimpleDateFormat;
@@ -23,6 +27,11 @@ public class PostActivity extends AppCompatActivity {
     private PostViewModel mPostViewModel;
     @BindView(R.id.edit_post) AppCompatEditText postEditText;
 
+    private static final String TAG = "PostActivity";
+    private CameraAdapter cameraAdapter;
+
+    private static final int CAMERA_REQUEST = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,6 +39,7 @@ public class PostActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         mPostViewModel = ViewModelProviders.of(this).get(PostViewModel.class);
+        cameraAdapter = new CameraAdapter(this);
     }
 
     private void makePost() {
@@ -40,6 +50,7 @@ public class PostActivity extends AppCompatActivity {
         }else{
             mPostViewModel.addPost(new JournalModel(
                     postEditText.getText().toString(),
+                    cameraAdapter.getCurrentPhotoPath(),
                     currDatTime
             ));
         }
@@ -54,15 +65,25 @@ public class PostActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
-        int id = item.getItemId();
-
-        if (id == R.id.save_btn) {
-            makePost();
-            finish();
-            return true;
+        switch (item.getItemId()) {
+            case R.id.save_btn:
+                makePost();
+                finish();
+                return true;
+            case R.id.camera_btn:
+                startActivityForResult(cameraAdapter.dispatchTakePictureIntent(), CAMERA_REQUEST);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        return super.onOptionsItemSelected(item);
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == CAMERA_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                cameraAdapter.setPhoto((ImageView) findViewById(R.id.imageView_post_photo), cameraAdapter.getCurrentPhotoPath());
+            }
+        }
     }
 }
