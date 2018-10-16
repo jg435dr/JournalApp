@@ -1,4 +1,4 @@
-package com.example.tobibur.journalapp.adapter;
+package com.example.tobibur.journalapp.helpers;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
+import android.view.View;
 import android.widget.ImageView;
 
 import com.example.tobibur.journalapp.R;
@@ -18,19 +19,21 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class CameraAdapter {
+public class CameraHelper {
 
     private Context context;
     private String currentPhotoPath;
     private static final double DEFAULT_MAX_BITMAP_DIMENSION = 512.0;
-    private static final int CAMERA_REQUEST = 1;
 
-    public CameraAdapter(Context context) {
+    public CameraHelper(Context context) {
         this.context = context;
     }
 
     public String getCurrentPhotoPath() {
         return currentPhotoPath;
+    }
+    public void setCurrentPhotoPath(String currentPhotoPath) {
+        this.currentPhotoPath = currentPhotoPath;
     }
 
     public Intent dispatchTakePictureIntent() {
@@ -48,7 +51,6 @@ public class CameraAdapter {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 return takePictureIntent;
-                //startActivityForResult(takePictureIntent, CAMERA_REQUEST);
             }
         }
         return null;
@@ -60,12 +62,11 @@ public class CameraAdapter {
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
         File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
+                imageFileName,
+                ".jpg",
+                storageDir
         );
 
-        // Save a file: path for use with ACTION_VIEW intents
         currentPhotoPath = image.getAbsolutePath();
         return image;
     }
@@ -73,7 +74,7 @@ public class CameraAdapter {
     public void setPhoto(ImageView photoView, String photoPath) {
         if (photoView != null && photoPath != null) {
             Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
-            if(bitmap != null) {
+            if (bitmap != null) {
                 int nh = (int) (bitmap.getHeight() * (DEFAULT_MAX_BITMAP_DIMENSION / bitmap.getWidth()));
                 Bitmap scaled = Bitmap.createScaledBitmap(bitmap, (int) DEFAULT_MAX_BITMAP_DIMENSION, nh, true);
                 Matrix matrix = new Matrix();
@@ -81,6 +82,32 @@ public class CameraAdapter {
                 Bitmap rotatedBitmap = Bitmap.createBitmap(scaled, 0, 0, scaled.getWidth(), scaled.getHeight(), matrix, true);
                 photoView.setImageBitmap(rotatedBitmap);
             }
+        }
+    }
+
+    public boolean deletePhoto(String photoPath) {
+        if (photoPath != null) {
+            File oldPhoto = new File(photoPath);
+            if (oldPhoto.exists() && oldPhoto.delete()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public Intent takeDisplayPhotoIntent(final String imagePath) {
+        if(imagePath == null) {
+            return null;
+        }
+        try {
+            Intent myIntent = new Intent(android.content.Intent.ACTION_VIEW);
+            File file = new File(imagePath);
+            String extension = android.webkit.MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(file).toString());
+            String mimetype = android.webkit.MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension);
+            myIntent.setDataAndType(Uri.fromFile(file), mimetype);
+            return myIntent;
+        } catch (Exception e) {
+            return null;
         }
     }
 }

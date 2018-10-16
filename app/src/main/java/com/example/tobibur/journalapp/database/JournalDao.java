@@ -17,8 +17,8 @@ public interface JournalDao {
     @Query("SELECT * FROM JournalModel ORDER BY date_time DESC")
     LiveData<List<JournalModel>> getAllPosts();
 
-    @Query("SELECT * from JournalModel where id = :id")
-    JournalModel getPostbyId(String id);
+    @Query("SELECT * from JournalModel where id = :id LIMIT 1")
+    JournalModel getPostbyId(int id);
 
     @Insert(onConflict = REPLACE)
     void insertPost(JournalModel journalModel);
@@ -28,4 +28,7 @@ public interface JournalDao {
 
     @Update
     void updatePost(JournalModel journalModel);
+
+//    @Query("SELECT * from JournalModel where id = :id")
+//    public abstract List<JournalModel> getPostbyId(String id);
 }
