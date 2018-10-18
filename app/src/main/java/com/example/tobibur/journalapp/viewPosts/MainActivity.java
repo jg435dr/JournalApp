@@ -15,16 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
+import com.example.tobibur.journalapp.helpers.CameraHelper;
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
 import com.example.tobibur.journalapp.addPosts.PostActivity;
 import com.example.tobibur.journalapp.database.JournalModel;
@@ -32,11 +32,8 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,12 +47,15 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     private MainViewModel mViewModel;
     private RecyclerAdapter adapter;
+    private CameraHelper cameraHelper;
+    private String photoPath;
     LayoutAnimationController mController=null;
 
     private static final String PREFS_NAME = "prefs";
     private static final String IS_FIRST_LAUNCH = "is_first";
 
-    private static int CODE_AUTHENTICATION_VERIFICATION=241;
+    private static final int CODE_AUTHENTICATION_VERIFICATION=241;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
             settings.edit().putBoolean(IS_FIRST_LAUNCH, false).apply();
             showTips();
         }
+        cameraHelper = new CameraHelper(this);
     }
 
     @Override
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 }
             }
         });
-
     }
 
     @Override
@@ -216,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         JournalModel journalModel = (JournalModel) view.getTag();
+                        cameraHelper.deletePhoto(journalModel.getPhotoPath());
                         mViewModel.deletePost(journalModel);
                         Toast.makeText(getApplicationContext()
                                 , journalModel.getPost()+"->Just deleted"
@@ -229,36 +230,29 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     @Override
     public void onClick(View view) {
+        View alertLayout = getLayoutInflater().inflate(R.layout.custom_dialog, null);
         final JournalModel journalModel = (JournalModel) view.getTag();
+        photoPath = journalModel.getPhotoPath();
+        ImageView dImage = alertLayout.findViewById(R.id.dImage);
+        cameraHelper.setPhoto(dImage, photoPath);
+
+        dImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if(photoPath != null) {
+                    startActivity(cameraHelper.takeDisplayPhotoIntent(photoPath));
+                }
+            }
+        });
+
         new AlertDialog.Builder(this)
+                .setView(alertLayout)
                 .setTitle(journalModel.getDate_time())
                 .setMessage(journalModel.getPost())
                 .setCancelable(true)
                 .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        updateDialog(journalModel);
-                    }
-                })
-                .setPositiveButton("Close", null)
-                .show();
-    }
-
-    private void updateDialog(final JournalModel journalModel) {
-        LayoutInflater inflater = getLayoutInflater();
-        View alertLayout = inflater.inflate(R.layout.custom_dialog, null);
-        final EditText mEditText = alertLayout.findViewById(R.id.dMessage);
-        mEditText.setText(journalModel.getPost());
-        new AlertDialog.Builder(this)
-                .setTitle(journalModel.getDate_time())
-                .setView(alertLayout)
-                .setCancelable(true)
-                .setNegativeButton("Update", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
-                        String currDatTime = sdf.format(new Date());
-                        journalModel.setDate_time(currDatTime);
-                        journalModel.setPost(mEditText.getText().toString());
-                        mViewModel.updatePost(journalModel);
+                        startActivity(new Intent(getApplicationContext(), PostActivity.class).putExtra("id", journalModel.getId()));
                     }
                 })
                 .setPositiveButton("Close", null)

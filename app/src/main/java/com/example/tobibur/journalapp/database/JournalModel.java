@@ -12,10 +12,20 @@ public class JournalModel {
     private int id;
     private String post;
     private String date_time;
+    private String photoPath;
 
-    public JournalModel(String post, String date_time) {
+    public JournalModel(String post, String photoPath, String date_time) {
         this.post = post;
         this.date_time = date_time;
+        this.photoPath = photoPath;
+    }
+
+    public String getPhotoPath() {
+        return photoPath;
+    }
+
+    public void setPhotoPath(String photoPath) {
+        this.photoPath = photoPath;
     }
 
     public int getId() {
