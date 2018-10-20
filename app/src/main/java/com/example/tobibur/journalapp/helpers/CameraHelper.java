@@ -11,6 +11,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
 

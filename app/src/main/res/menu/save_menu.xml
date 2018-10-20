@@ -8,10 +8,4 @@
         android:title=""
         app:showAsAction="ifRoom"/>
 
-    <item
-        android:id="@+id/save_btn"
-        android:icon="@drawable/save"
-        android:title=""
-        app:showAsAction="always"/>
-
 </menu>

@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.app.AlertDialog;
@@ -27,6 +28,7 @@ import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PostActivity extends AppCompatActivity {
 
@@ -82,7 +84,8 @@ public class PostActivity extends AppCompatActivity {
         }
     }
 
-    private void makePost() {
+    @OnClick(R.id.fabPost)
+    public void makePost() {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.US);
         String currDatTime = sdf.format(new Date());
         if(postEditText.getText() == null){
@@ -99,6 +102,7 @@ public class PostActivity extends AppCompatActivity {
                     currDatTime
             ));
         }
+        finish();
     }
 
     @Override
@@ -111,10 +115,6 @@ public class PostActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.save_btn:
-                makePost();
-                finish();
-                return true;
             case R.id.camera_btn:
                 startActivityForResult(cameraHelper.dispatchTakePictureIntent(), CAMERA_REQUEST);
                 return true;
@@ -127,8 +127,16 @@ public class PostActivity extends AppCompatActivity {
         photoImageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(photoPath != null) {
-                    startActivity(cameraHelper.takeDisplayPhotoIntent(photoPath));
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                    if (photoPath != null) {
+                        Intent intent = cameraHelper.takeDisplayPhotoIntent(photoPath);
+                        if (intent != null) {
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error -> opening image"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });

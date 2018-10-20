@@ -15,12 +15,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.system.Os;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.tobibur.journalapp.R;
@@ -234,13 +236,23 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         final JournalModel journalModel = (JournalModel) view.getTag();
         photoPath = journalModel.getPhotoPath();
         ImageView dImage = alertLayout.findViewById(R.id.dImage);
+        TextView dText = alertLayout.findViewById(R.id.dText);
         cameraHelper.setPhoto(dImage, photoPath);
+        dText.setText(journalModel.getPost());
 
         dImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(photoPath != null) {
-                    startActivity(cameraHelper.takeDisplayPhotoIntent(photoPath));
+                if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.M) {
+                    if (photoPath != null) {
+                        Intent intent = cameraHelper.takeDisplayPhotoIntent(photoPath);
+                        if (intent != null) {
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Error -> displaying image"
+                                    , Toast.LENGTH_SHORT).show();
+                        }
+                    }
                 }
             }
         });
@@ -248,7 +260,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         new AlertDialog.Builder(this)
                 .setView(alertLayout)
                 .setTitle(journalModel.getDate_time())
-                .setMessage(journalModel.getPost())
                 .setCancelable(true)
                 .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
