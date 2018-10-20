@@ -79,7 +79,7 @@ public class CameraHelper {
                 int nh = (int) (bitmap.getHeight() * (DEFAULT_MAX_BITMAP_DIMENSION / bitmap.getWidth()));
                 Bitmap scaled = Bitmap.createScaledBitmap(bitmap, (int) DEFAULT_MAX_BITMAP_DIMENSION, nh, true);
                 Matrix matrix = new Matrix();
-                matrix.postRotate(0);
+                matrix.postRotate(90);
                 Bitmap rotatedBitmap = Bitmap.createBitmap(scaled, 0, 0, scaled.getWidth(), scaled.getHeight(), matrix, true);
                 photoView.setImageBitmap(rotatedBitmap);
             }
