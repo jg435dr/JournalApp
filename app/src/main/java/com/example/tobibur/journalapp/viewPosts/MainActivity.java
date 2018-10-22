@@ -187,7 +187,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         recyclerView.setLayoutManager(linearLayoutManager);
 
         recyclerView.setHasFixedSize(true);
-        adapter = new RecyclerAdapter(new ArrayList<JournalModel>(), this,this);
+        adapter = new RecyclerAdapter(new ArrayList<JournalModel>(), this,this, this);
         recyclerView.setLayoutAnimation(mController);
         recyclerView.setAdapter(adapter);
         mViewModel.getPostList().observe(this, new Observer<List<JournalModel>>() {
@@ -263,7 +263,8 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .setCancelable(true)
                 .setNegativeButton("Edit", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        startActivity(new Intent(getApplicationContext(), PostActivity.class).putExtra("id", journalModel.getId()));
+                        startActivity(new Intent(getApplicationContext(), PostActivity.class)
+                                .putExtra("id", journalModel.getId()));
                     }
                 })
                 .setPositiveButton("Close", null)

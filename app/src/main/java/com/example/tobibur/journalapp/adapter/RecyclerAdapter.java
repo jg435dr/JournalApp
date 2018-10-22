@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.bumptech.glide.Glide;
 import com.example.tobibur.journalapp.R;
 import com.example.tobibur.journalapp.database.JournalModel;
 
@@ -17,11 +18,14 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
     private List<JournalModel> posts;
     private View.OnLongClickListener longClickListener;
     private View.OnClickListener mOnClickListener;
+    private Context mContext;
 
-    public RecyclerAdapter(List<JournalModel> posts, View.OnLongClickListener longClickListener, View.OnClickListener onClickListener) {
+    public RecyclerAdapter(List<JournalModel> posts, View.OnLongClickListener longClickListener,
+                           View.OnClickListener onClickListener, Context context) {
         this.posts = posts;
         this.longClickListener = longClickListener;
         this.mOnClickListener = onClickListener;
+        this.mContext = context;
     }
 
     @NonNull
@@ -38,6 +42,11 @@ public class RecyclerAdapter extends RecyclerView.Adapter<ViewHolder>{
         JournalModel post = posts.get(i);
         viewHolder.dateTime.setText(post.getDate_time());
         viewHolder.posts.setText(post.getPost());
+        if(post.getPhotoPath() != null) {
+            Glide.with(mContext).load(post.getPhotoPath()).into(viewHolder.postImage);
+        }else {
+            viewHolder.postImage.setVisibility(View.GONE);
+        }
         viewHolder.itemView.setTag(post);
         viewHolder.itemView.setOnLongClickListener(longClickListener);
         viewHolder.itemView.setOnClickListener(mOnClickListener);

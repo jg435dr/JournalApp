@@ -34,6 +34,13 @@
                 android:id="@+id/post_textView"
                 android:text="@string/my_post_here"
                 android:textSize="18sp"/>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:scaleType="centerCrop"
+                android:layout_marginTop="8dp"
+                android:id="@+id/post_image"/>
         </LinearLayout>
 
 
