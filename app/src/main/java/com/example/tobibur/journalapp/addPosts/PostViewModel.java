@@ -1,9 +1,9 @@
 package com.example.tobibur.journalapp.addPosts;
 
 import android.app.Application;
-import android.arch.lifecycle.AndroidViewModel;
+import androidx.lifecycle.AndroidViewModel;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.example.tobibur.journalapp.database.JournalDatabase;
 import com.example.tobibur.journalapp.database.JournalModel;
