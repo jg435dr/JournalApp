@@ -42,7 +42,8 @@
                     android:id="@+id/imageView_post_photo"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:adjustViewBounds="true" />
+                    android:adjustViewBounds="true"
+                    android:contentDescription="@string/post_image" />
             </LinearLayout>
         </LinearLayout>
     </ScrollView>

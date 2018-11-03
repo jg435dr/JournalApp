@@ -40,7 +40,8 @@
                 android:layout_height="200dp"
                 android:scaleType="centerCrop"
                 android:layout_marginTop="8dp"
-                android:id="@+id/post_image"/>
+                android:id="@+id/post_image"
+                android:contentDescription="@string/post_image" />
         </LinearLayout>
 
 

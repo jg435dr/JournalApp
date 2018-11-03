@@ -74,8 +74,6 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                     }
                     startActivityForResult(i, CODE_AUTHENTICATION_VERIFICATION);
                 }
-                else
-                    Toast.makeText(this, "No any security setup done by user(pattern or password or pin or fingerprint", Toast.LENGTH_SHORT).show();
             }
         }
 
