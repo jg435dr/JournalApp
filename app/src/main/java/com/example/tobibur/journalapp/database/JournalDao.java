@@ -28,7 +28,4 @@ public interface JournalDao {
 
     @Update
     void updatePost(JournalModel journalModel);
-
-//    @Query("SELECT * from JournalModel where id = :id")
-//    public abstract List<JournalModel> getPostbyId(String id);
 }

@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     private CameraHelper cameraHelper;
     private String photoPath;
     LayoutAnimationController mController=null;
+    private boolean authentication = false;
 
     private static final String PREFS_NAME = "prefs";
     private static final String IS_FIRST_LAUNCH = "is_first";
@@ -63,16 +64,18 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        KeyguardManager km = (KeyguardManager)getSystemService(KEYGUARD_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            if (km != null) {
-                if(km.isKeyguardSecure()) {
+        if(authentication) {
+            KeyguardManager km = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                if (km != null) {
+                    if (km.isKeyguardSecure()) {
 
-                    Intent i = null;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        i = km.createConfirmDeviceCredentialIntent("Authentication required", "password");
+                        Intent i = null;
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                            i = km.createConfirmDeviceCredentialIntent("Authentication required", "password");
+                        }
+                        startActivityForResult(i, CODE_AUTHENTICATION_VERIFICATION);
                     }
-                    startActivityForResult(i, CODE_AUTHENTICATION_VERIFICATION);
                 }
             }
         }
@@ -103,6 +106,12 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         }
         cameraHelper = new CameraHelper(this);
     }
+
+    public void setAuthentication(boolean authentication) {
+        this.authentication = authentication;
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -211,7 +220,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
 
     private void deleteDialog(final View view) {
         new AlertDialog.Builder(this)
-                .setMessage("Are you sure you want to delete this post?")
+                    .setMessage("Are you sure you want to delete this post?")
                 .setCancelable(true)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
