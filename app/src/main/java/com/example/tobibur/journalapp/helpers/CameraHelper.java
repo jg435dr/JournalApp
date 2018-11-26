@@ -49,6 +49,8 @@ public class CameraHelper {
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 return takePictureIntent;
+
+                // mnau hau
             }
         }
         return null;
