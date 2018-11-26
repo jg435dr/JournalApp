@@ -12,6 +12,8 @@ import androidx.core.content.FileProvider;
 
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -21,8 +23,6 @@ public class CameraHelper {
 
     private Context context;
     private String currentPhotoPath;
-    private static final double DEFAULT_MAX_BITMAP_DIMENSION = 512.0;
-
     public CameraHelper(Context context) {
         this.context = context;
     }
@@ -67,20 +67,6 @@ public class CameraHelper {
 
         currentPhotoPath = image.getAbsolutePath();
         return image;
-    }
-
-    public void setPhoto(ImageView photoView, String photoPath) {
-        if (photoView != null && photoPath != null) {
-            Bitmap bitmap = BitmapFactory.decodeFile(photoPath);
-            if (bitmap != null) {
-                int nh = (int) (bitmap.getHeight() * (DEFAULT_MAX_BITMAP_DIMENSION / bitmap.getWidth()));
-                Bitmap scaled = Bitmap.createScaledBitmap(bitmap, (int) DEFAULT_MAX_BITMAP_DIMENSION, nh, true);
-                Matrix matrix = new Matrix();
-                matrix.postRotate(90);
-                Bitmap rotatedBitmap = Bitmap.createBitmap(scaled, 0, 0, scaled.getWidth(), scaled.getHeight(), matrix, true);
-                photoView.setImageBitmap(rotatedBitmap);
-            }
-        }
     }
 
     public boolean deletePhoto(String photoPath) {

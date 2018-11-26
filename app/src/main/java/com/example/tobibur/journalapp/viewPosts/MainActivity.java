@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.tobibur.journalapp.R;
 import com.example.tobibur.journalapp.helpers.CameraHelper;
 import com.example.tobibur.journalapp.adapter.RecyclerAdapter;
@@ -34,6 +35,7 @@ import com.getkeepsafe.taptargetview.TapTarget;
 import com.getkeepsafe.taptargetview.TapTargetView;
 import com.jetradar.desertplaceholder.DesertPlaceholder;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -244,7 +246,9 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
         photoPath = journalModel.getPhotoPath();
         ImageView dImage = alertLayout.findViewById(R.id.dImage);
         TextView dText = alertLayout.findViewById(R.id.dText);
-        cameraHelper.setPhoto(dImage, photoPath);
+        if (photoPath != null) {
+            Glide.with(getApplicationContext()).load(new File(photoPath)).into(dImage);
+        }
         dText.setText(journalModel.getPost());
 
         dImage.setOnClickListener(new View.OnClickListener() {

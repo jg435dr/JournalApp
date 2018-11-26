@@ -16,11 +16,13 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.tobibur.journalapp.R;
 import com.example.tobibur.journalapp.helpers.CameraHelper;
 import com.example.tobibur.journalapp.database.JournalModel;
 import com.example.tobibur.journalapp.viewPosts.MainViewModel;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -74,7 +76,7 @@ public class PostActivity extends AppCompatActivity {
                         photoPath = jModel.getPhotoPath();
                         cameraHelper.setCurrentPhotoPath(photoPath);
                         if(photoPath != null) {
-                            cameraHelper.setPhoto(photoImageView, jModel.getPhotoPath());
+                            Glide.with(getApplicationContext()).load(new File(photoPath)).into(photoImageView);
                             setOnClickPhoto();
                         }
                         editPost = true;
@@ -169,7 +171,7 @@ public class PostActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 cameraHelper.deletePhoto(photoPath);
                 photoPath = cameraHelper.getCurrentPhotoPath();
-                cameraHelper.setPhoto(photoImageView, photoPath);
+                Glide.with(getApplicationContext()).load(new File(photoPath)).into(photoImageView);
                 setOnClickPhoto();
             }
         }

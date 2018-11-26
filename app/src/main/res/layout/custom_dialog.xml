@@ -8,8 +8,7 @@
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/fab_margin"
-        android:layout_marginRight="@dimen/fab_margin"
+        android:layout_margin="@dimen/fab_margin"
         android:orientation="vertical">
 
         <TextView
@@ -25,8 +24,9 @@
 
         <ImageView
             android:id="@+id/dImage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:scaleType="fitCenter"
             android:layout_gravity="center"
             android:contentDescription="@string/post_image" />
     </LinearLayout>
