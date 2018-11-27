@@ -261,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                             startActivity(intent);
                         } else {
                             Toast.makeText(getApplicationContext(), "Error -> displaying image"
-                                    , Toast.LENGTH_SHORT).show();
+                                    , Toast.LENGTH_SHORT).show()
                         }
                     }
                 }
