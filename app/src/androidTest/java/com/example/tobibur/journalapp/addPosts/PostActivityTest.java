@@ -36,26 +36,11 @@ public class PostActivityTest {
 
     @Rule
     public ActivityTestRule<PostActivity> postActivityActivityTestRule =
-            new ActivityTestRule<PostActivity>(PostActivity.class);
+            new ActivityTestRule<>(PostActivity.class);
 
-//    @Rule
-//    public IntentsTestRule<MainActivity> intentsTestRule =
-//            new IntentsTestRule<>(MainActivity.class);
-
-
-
-    @Before
-    public void setUp() throws Exception {
-        // Context context = ApplicationProvider.getApplicationContext();
-
-    }
-
-    @After
-    public void tearDown() throws Exception {
-    }
 
     @Test
-    public void clickOnAddPostButton() throws Exception{
+    public void clickOnAddPostButton() {
         String message = "Click on Add Post Button";
         onView(withId(R.id.edit_post))
                 .check(matches(isDisplayed()))

@@ -23,14 +23,13 @@ import androidx.test.runner.AndroidJUnit4;
 
 import static org.junit.Assert.*;
 
-import static org.mockito.Mockito.mock;
 
 @RunWith(AndroidJUnit4.class)
 public class JournalDaoTest {
 
     @Rule
     public ActivityTestRule<MainActivity> menuActivityTestRule =
-            new ActivityTestRule<MainActivity>(MainActivity.class);
+            new ActivityTestRule<>(MainActivity.class);
 
     private JournalDatabase journalDb;
     private PostViewModel mPostViewModel;
@@ -39,7 +38,6 @@ public class JournalDaoTest {
 
     @Before
     public void setUp() throws Exception {
-        // Context context = ApplicationProvider.getApplicationContext();
         Context appContext = InstrumentationRegistry.getTargetContext();
         journalDb = Room.inMemoryDatabaseBuilder(appContext, JournalDatabase.class).build();
         mPostViewModel = ViewModelProviders.of(menuActivityTestRule.getActivity()).get(PostViewModel.class);
@@ -55,7 +53,7 @@ public class JournalDaoTest {
     }
 
     @After
-    public void tearDown() throws Exception {
+    public void tearDown(){
         journalDb.close();
     }
 
@@ -66,7 +64,7 @@ public class JournalDaoTest {
         mPostViewModel.addPost(post);
         Thread.sleep(1000);
 
-        assertEquals(inDatabase(post), true);
+        assertTrue(inDatabase(post));
     }
 
     @Test
@@ -76,13 +74,13 @@ public class JournalDaoTest {
 
         mPostViewModel.addPost(post);
         Thread.sleep(1000);
-        assertEquals(inDatabase(post), true);
+        assertTrue(inDatabase(post));
 
         samePost.setPost(postText);
         mViewModel.updatePost(samePost);
         Thread.sleep(1000);
 
-        assertEquals(inDatabase(samePost), true);
+        assertTrue(inDatabase(samePost));
     }
 
     @Test
@@ -91,12 +89,12 @@ public class JournalDaoTest {
 
         mPostViewModel.addPost(post);
         Thread.sleep(1000);
-        assertEquals(inDatabase(post), true);
+        assertTrue(inDatabase(post));
 
         mViewModel.deletePost(samePost);
         Thread.sleep(1000);
 
-        assertEquals(inDatabase(samePost), false);
+        assertFalse(inDatabase(samePost));
     }
 
     private boolean inDatabase(JournalModel post) {
