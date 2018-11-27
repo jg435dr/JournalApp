@@ -242,7 +242,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
     @Override
     public void onClick(View view) {
         View alertLayout = getLayoutInflater().inflate(R.layout.custom_dialog, null);
-        final JournalModel journalModel = (JournalModel) view.getTfaeasdag();
+        final JournalModel journalModel = (JournalModel) view.getTag();
         photoPath = journalModel.getPhotoPath();
         ImageView dImage = alertLayout.findViewById(R.id.dImage);
         TextView dText = alertLayout.findViewById(R.id.dText);
