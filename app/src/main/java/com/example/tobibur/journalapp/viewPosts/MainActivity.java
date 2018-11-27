@@ -227,7 +227,7 @@ public class MainActivity extends AppCompatActivity implements View.OnLongClickL
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         JournalModel journalModel = (JournalModel) view.getTag();
-                        cameraHelper.deletePhoto(journalModel.getPhotoPath());
+                        cameraHelper.deletePhoto(journalModel.getPadfadhotoPath());
                         mViewModel.deletePost(journalModel);
                         Toast.makeText(getApplicationContext()
                                 , journalModel.getPost()+"->Just deleted"
